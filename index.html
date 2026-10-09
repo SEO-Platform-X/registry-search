@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Search">
+<meta name="theme-color" content="#FFFFFF">
+<title>Search on Google</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Bricolage+Grotesque:opsz,wght@12..96,500&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0B1A2E; --blue: #1F4FE0; --coral: #FF5A3C;
+    --text: #202124; --muted: #70757a; --border: #dfe1e5;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: #fff;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: #fff; color: var(--text);
+    font-family: "Hanken Grotesk", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column;
+  }
+  main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.1rem 6rem; }
+  h1 {
+    margin: 0 0 1.8rem;
+    font-family: "Cormorant", Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: clamp(2.8rem, 13vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-align: center;
+  }
+  h1 em { font-style: italic; font-weight: 500; }
+  form { width: 100%; max-width: 36rem; }
+  .bar {
+    display: flex; align-items: center; gap: 0.6rem;
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.75rem 1.1rem; background: #fff;
+    transition: box-shadow 0.15s;
+  }
+  .bar:hover, .bar:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,0.28); border-color: transparent; }
+  .bar svg { flex: none; width: 20px; height: 20px; fill: #9aa0a6; }
+  .bar input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 1.05rem; color: var(--text); background: transparent; -webkit-appearance: none; }
+  .bar input::-webkit-search-cancel-button { -webkit-appearance: none; }
+  .clear { flex: none; border: 0; background: none; padding: 0.2rem; cursor: pointer; display: none; }
+  .clear svg { fill: var(--muted); }
+  .has-text .clear { display: block; }
+  .actions { display: flex; justify-content: center; margin-top: 1.5rem; }
+  .btn { background: #f8f9fa; border: 1px solid #f8f9fa; border-radius: 6px; color: #3c4043; font: inherit; font-size: 0.92rem; padding: 0.6rem 1.2rem; cursor: pointer; }
+  .btn:hover { border-color: #dadce0; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+  .btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  footer {
+    display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+    padding: 1rem 0 1.4rem;
+    font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 500;
+    font-size: 0.8rem; color: var(--muted);
+  }
+  footer .dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--coral); }
+  @media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Search <em>on</em> Google</h1>
+  <form id="f" role="search" autocomplete="off">
+    <div class="bar" id="bar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input id="q" type="search" inputmode="search" enterkeyhint="search" placeholder="Search a business name" aria-label="Search a business name">
+      <button type="button" class="clear" id="clear" aria-label="Clear search">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <div class="actions"><button type="submit" class="btn">Search</button></div>
+  </form>
+</main>
+<footer><span class="dot" aria-hidden="true"></span>Local AI Registry</footer>
+<script>
+(function () {
+  var SITE = "localairegistry.com";
+  var q = document.getElementById("q"), bar = document.getElementById("bar");
+  function sync() { bar.classList.toggle("has-text", q.value.length > 0); }
+  q.addEventListener("input", sync);
+  document.getElementById("clear").addEventListener("click", function () { q.value = ""; sync(); q.focus(); });
+  document.getElementById("f").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var term = q.value.trim();
+    if (!term) { q.focus(); return; }
+    var url = "https://www.google.com/search?q=" + encodeURIComponent(term + " " + SITE);
+    var w = window.open(url, "_blank", "noopener");
+    if (!w) { var a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+  });
+})();
+</script>
+</body>
+</html>
